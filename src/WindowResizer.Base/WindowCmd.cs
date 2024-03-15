@@ -10,14 +10,26 @@ namespace WindowResizer.Base;
 
 public static class WindowCmd
 {
-    public static bool Resize(string? configPath, string? profileName, string? process, string? title,
+    public static bool Resize(string? configPath, string? profileName, string? process, string? title, int? width, int? height,
         Action<string>? onError = null,
         Action<List<TargetWindow>>? onDebug = null)
     {
+        // now we have the positions as arguments
+        // so, we give a shit to this profile
         var profile = LoadConfig(configPath, profileName, onError);
-        if (profile is null)
+        if (profile is null && width is null && height is null)
         {
             return false;
+        }
+        else if (width is not null && height is not null)
+        {
+            profile = new();
+            profile.EnableResizeByTitle = true;
+            profile.WindowSizes.Add(new WindowSize {
+                Title = title!,
+                Width = width,
+                Height = height
+            });
         }
 
         var windows = Resizer.GetOpenWindows();

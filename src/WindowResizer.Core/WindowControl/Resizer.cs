@@ -92,6 +92,28 @@ public static class Resizer
         return result == IntPtr.Zero;
     }
 
+    // the name of this library is WindowResizer
+    // and there is no a method to resize a window 🤷‍♂️
+    public static bool ResizeWindow(IntPtr hWnd, int h, int w)
+    {
+        if (hWnd == IntPtr.Zero)
+            return false;
+
+        var rect = GetRect(hWnd);
+
+        ShowWindow(hWnd, (int)ShowWindowCommands.Normal);
+        var result = SetWindowPos(
+            hWnd,
+            0,
+            rect.Left,
+            rect.Top,
+            w, h,
+            (int)SetWindowPosFlags.SWP_NOOWNERZORDER
+        );
+
+        return result == IntPtr.Zero;
+    }
+
     public static string? GetProcessName(IntPtr hWnd)
     {
         try

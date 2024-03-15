@@ -50,14 +50,25 @@ public static class WindowUtils
         }
 
         var windowTitle = Resizer.GetWindowTitle(handle) ?? string.Empty;
+
+
+
         var match = GetMatchWindowSize(config.WindowSizes, processName, windowTitle, config.EnableResizeByTitle, onlyAuto);
-        if (!match.NoMatch)
+        if (match.NoMatch)
         {
-            MoveMatchWindow(match, handle);
+            onConfigNoMatch?.Invoke(processName, windowTitle);
+        }
+        else if (match.TitleMatch?.Width != -1)
+        {
+            Resizer.ResizeWindow(
+                handle,
+                (int)match.TitleMatch?.Width!,
+                (int)match.TitleMatch?.Height!
+            );
         }
         else
         {
-            onConfigNoMatch?.Invoke(processName, windowTitle);
+            MoveMatchWindow(match, handle);
         }
     }
 
@@ -184,6 +195,10 @@ public static class WindowUtils
                                      w.Name.Equals(processName, StringComparison.OrdinalIgnoreCase))
                                  .ToList();
 
+        var windowByTitle = windowSizes.Where(w =>
+                                              w.Title.Equals(title, StringComparison.OrdinalIgnoreCase))
+                                      .ToList();
+
         if (!enableResizeByTitle)
         {
             windows = windows.Where(w => w.Title.Equals("*")).ToList();
@@ -216,7 +231,8 @@ public static class WindowUtils
                 w.Title.StartsWith("*") && w.Title.Length > 1 && title!.EndsWith(w.Title.TrimStart('*'))),
             SuffixMatch = windows.FirstOrDefault(w =>
                 w.Title.EndsWith("*") && w.Title.Length > 1 && title!.StartsWith(w.Title.TrimEnd('*'))),
-            WildcardMatch = windows.FirstOrDefault(w => w.Title.Equals("*"))
+            WildcardMatch = windows.FirstOrDefault(w => w.Title.Equals("*")),
+            TitleMatch = windowByTitle.FirstOrDefault()
         };
     }
 

@@ -12,6 +12,11 @@ public class WindowSize : IComparable<WindowSize>
 
     public Rect Rect { get; set; }
 
+    // in case of the awesome -h -w
+    // -1 means NOT USE THIS MOTHERFUCKER
+    public int? Width { get; set; } = -1;
+    public int? Height { get; set; } = -1;
+
     public WindowState State { get; set; } = WindowState.Normal;
 
     public Point MaximizedPosition { get; set; } = new(0, 0);

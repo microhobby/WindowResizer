@@ -22,8 +22,12 @@ namespace WindowResizer.CLI.Commands
             AddOption(titleOption);
             var verboseOption = new VerboseOption();
             AddOption(verboseOption);
+            var heightOption = new HeightOption();
+            AddOption(heightOption);
+            var widthOption = new WidthOption();
+            AddOption(widthOption);
 
-            this.SetHandler((config, profile, process, title, verbose) =>
+            this.SetHandler((config, profile, process, title, verbose, h, w) =>
             {
                 void VerboseInfo(List<WindowCmd.TargetWindow> lists)
                 {
@@ -33,9 +37,9 @@ namespace WindowResizer.CLI.Commands
                     }
                 }
 
-                var success = WindowCmd.Resize(config?.FullName, profile, process, title, Output.Error, VerboseInfo);
+                var success = WindowCmd.Resize(config?.FullName, profile, process, title, w, h, Output.Error, VerboseInfo);
                 return Task.FromResult(success ? 0 : 1);
-            }, configOption, profileOption, processOption, titleOption, verboseOption);
+            }, configOption, profileOption, processOption, titleOption, verboseOption, widthOption, heightOption);
         }
 
         private static void Verbose(List<WindowCmd.TargetWindow> lists)

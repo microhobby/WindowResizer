@@ -74,6 +74,36 @@ namespace WindowResizer.CLI.Commands
         }
     }
 
+    public class WidthOption : Option<int>
+    {
+        public WidthOption() : base(
+            aliases: new[]
+            {
+                "--width",
+                "-w"
+            },
+            description: "Window width.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = false;
+        }
+    }
+
+    public class HeightOption : Option<int>
+    {
+        public HeightOption() : base(
+            aliases: new[]
+            {
+                "--height",
+                "-h"
+            },
+            description: "Window height.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = false;
+        }
+    }
+
     public class VerboseOption : Option<bool>
     {
         public VerboseOption() : base(

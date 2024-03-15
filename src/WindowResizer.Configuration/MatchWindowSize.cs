@@ -12,14 +12,17 @@ public class MatchWindowSize
 
     public WindowSize? WildcardMatch { get; set; }
 
+    public WindowSize? TitleMatch { get; set; }
+
     public bool NoMatch =>
         FullMatch == null
         && PrefixMatch == null
         && SuffixMatch == null
-        && WildcardMatch == null;
+        && WildcardMatch == null
+        && TitleMatch == null;
 
     public List<WindowSize?> All => new()
     {
-        FullMatch, PrefixMatch, SuffixMatch, WildcardMatch
+        FullMatch, PrefixMatch, SuffixMatch, WildcardMatch, TitleMatch
     };
 }
