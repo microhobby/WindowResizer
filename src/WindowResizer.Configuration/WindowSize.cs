@@ -16,6 +16,8 @@ public class WindowSize : IComparable<WindowSize>
     // -1 means NOT USE THIS MOTHERFUCKER
     public int? Width { get; set; } = -1;
     public int? Height { get; set; } = -1;
+    public int? X { get; set; } = -1;
+    public int? Y { get; set; } = -1;
 
     public WindowState State { get; set; } = WindowState.Normal;
 

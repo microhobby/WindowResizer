@@ -22,24 +22,50 @@ namespace WindowResizer.CLI.Commands
             AddOption(titleOption);
             var verboseOption = new VerboseOption();
             AddOption(verboseOption);
-            var heightOption = new HeightOption();
-            AddOption(heightOption);
-            var widthOption = new WidthOption();
-            AddOption(widthOption);
+            var sizeOption = new SizeOption();
+            AddOption(sizeOption);;
+            var posOption = new PosOption();
+            AddOption(posOption);
 
-            this.SetHandler((config, profile, process, title, verbose, h, w) =>
-            {
-                void VerboseInfo(List<WindowCmd.TargetWindow> lists)
+            this.SetHandler(
+                (config, profile, process, title, verbose, size, pos) =>
                 {
-                    if (verbose)
+                    void VerboseInfo(List<WindowCmd.TargetWindow> lists)
                     {
-                        Verbose(lists);
+                        if (verbose)
+                        {
+                            Verbose(lists);
+                        }
                     }
-                }
 
-                var success = WindowCmd.Resize(config?.FullName, profile, process, title, w, h, Output.Error, VerboseInfo);
-                return Task.FromResult(success ? 0 : 1);
-            }, configOption, profileOption, processOption, titleOption, verboseOption, widthOption, heightOption);
+                    var success = WindowCmd.Resize(
+                        config?.FullName,
+                        profile,
+                        process,
+                        title,
+                        size[0],
+                        size[1],
+                        pos[0],
+                        pos[1],
+                        Output.Error,
+                        VerboseInfo
+                    );
+
+                    if (!success) {
+                        System.Console.WriteLine("FAILED");
+                    }
+
+                    var ret = Task.FromResult(success ? 0 : 1);
+                    return ret;
+                },
+                configOption,
+                profileOption,
+                processOption,
+                titleOption,
+                verboseOption,
+                sizeOption,
+                posOption
+            );
         }
 
         private static void Verbose(List<WindowCmd.TargetWindow> lists)

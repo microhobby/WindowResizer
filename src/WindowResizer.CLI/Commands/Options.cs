@@ -89,6 +89,36 @@ namespace WindowResizer.CLI.Commands
         }
     }
 
+    public class SizeOption : Option<int[]>
+    {
+        public SizeOption() : base(
+            aliases: new[]
+            {
+                "--size",
+                "-s"
+            },
+            description: "Window size.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = true;
+        }
+    }
+
+    public class PosOption : Option<int[]>
+    {
+        public PosOption() : base(
+            aliases: new[]
+            {
+                "--pos",
+                "-i"
+            },
+            description: "Window pos.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = true;
+        }
+    }
+
     public class HeightOption : Option<int>
     {
         public HeightOption() : base(
@@ -98,6 +128,36 @@ namespace WindowResizer.CLI.Commands
                 "-h"
             },
             description: "Window height.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = false;
+        }
+    }
+
+    public class XOption : Option<int>
+    {
+        public XOption() : base(
+            aliases: new[]
+            {
+                "--pos-x",
+                "-x"
+            },
+            description: "Window pos x.")
+        {
+            IsRequired = false;
+            AllowMultipleArgumentsPerToken = false;
+        }
+    }
+
+    public class YOption : Option<int>
+    {
+        public YOption() : base(
+            aliases: new[]
+            {
+                "--pos-y",
+                "-y"
+            },
+            description: "Window pos y.")
         {
             IsRequired = false;
             AllowMultipleArgumentsPerToken = false;

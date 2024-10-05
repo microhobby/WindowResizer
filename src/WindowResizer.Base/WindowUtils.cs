@@ -65,6 +65,21 @@ public static class WindowUtils
                 (int)match.TitleMatch?.Width!,
                 (int)match.TitleMatch?.Height!
             );
+
+            // in this case we propably is setting the position too
+            if (match.TitleMatch?.X != -1)
+            {
+                Resizer.MoveWindow(
+                    handle,
+                    new Rect
+                    {
+                        Left = (int)match.TitleMatch?.X!,
+                        Top = (int)match.TitleMatch?.Y!,
+                        Right = (int)match.TitleMatch?.X! + (int)match.TitleMatch?.Width!,
+                        Bottom = (int)match.TitleMatch?.Y! + (int)match.TitleMatch?.Height!
+                    }
+                );
+            }
         }
         else
         {
