@@ -23,7 +23,7 @@ namespace WindowResizer.CLI
                          .UseDefaults()
                          .UseExceptionHandler((e, _) =>
                          {
-                             Output.Error(e.Message);
+                            Output.Error(e.Message);
                          }, 1)
                          .UseHelp(ctx =>
                          {

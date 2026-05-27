@@ -14,8 +14,8 @@ WindowResizer is a simple tool that gives you a way to use hotkeys to quickly sa
 
 - Microsoft Store
     > [<img src="https://raw.githubusercontent.com/caoyue/WindowResizer/package/.github/assets/microsoft-store-badge.png" width="160" title="Get WindowResizer from Microsoft Store" alt="Get WindowResizer from Microsoft Store">](https://www.microsoft.com/store/apps/9NZ07CQ6WZMB)
-    
-    The Windows Store version has the same features as the GitHub release version.  
+
+    The Windows Store version has the same features as the GitHub release version.
     You can support development by purchasing it on the Windows Store.
 
 ## App
@@ -44,7 +44,7 @@ Change hotkeys in setting window.
         <summary>demo</summary>
         <img src="https://i.imgur.com/3558lKS.gif" title="restore all" loading="lazy" />
     </details>
-    
+
 
 ### usage
 
@@ -79,7 +79,7 @@ Change hotkeys in setting window.
     - download portable package
     - put `WindowResizer.config.json` in the same folder as the program file `WindowResizer.exe`
 ## CLI
-run ```WindowResizer.CLI.exe resize -h```   
+run ```WindowResizer.CLI.exe resize -h```
 > The CLI can run standalone without WindowResizer App running.
 
 ```
@@ -95,7 +95,7 @@ Usage:
 
 Options:
   -c, --config <config>    Config file path, use current config file if omitted.
-  -P, --profile <profile>  Profile name, use current profile if omitted.
+    -r, --profile <profile>  Profile name, use current profile if omitted.
   -p, --process <process>  Process name, use foreground process if omitted.
   -t, --title <title>      Process title, all windows of the process will be resized if not specified.
   -v, --verbose            Show more details.
@@ -103,13 +103,13 @@ Options:
 ```
 
 e.g.,
- 
+
 ```shell
 # Resize all
 WindowResizer.CLI.exe resize
 
 # Specify config file and profile
-WindowResizer.CLI.exe resize -c "X:\WindowResizer.config.json" -P "my-profile"
+WindowResizer.CLI.exe resize -c "X:\WindowResizer.config.json" -r "my-profile"
 
 # Show verbose
 WindowResizer.CLI.exe resize -v
@@ -118,10 +118,10 @@ WindowResizer.CLI.exe resize -v
 WindowResizer.CLI.exe resize -p "notepad.exe"
 
 # Filter windows by title regex
-WindowResizer.CLI.exe resize -t ".*.txt" 
+WindowResizer.CLI.exe resize -t ".*.txt"
 
 # Combine all options
-WindowResizer.CLI.exe resize -c "X:\WindowResizer.config.json" -P "my-profile" -p "notepad.exe" -t ".*.txt" -v
+WindowResizer.CLI.exe resize -c "X:\WindowResizer.config.json" -r "my-profile" -p "notepad.exe" -t ".*.txt" -v
 ```
 
 

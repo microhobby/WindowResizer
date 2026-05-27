@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using WindowResizer.Common.Windows;
 using WindowResizer.Configuration;
 using WindowResizer.Core.WindowControl;
 using static WindowResizer.Base.WindowUtils;
@@ -22,33 +23,20 @@ public static class WindowCmd
         Action<string>? onError = null,
         Action<List<TargetWindow>>? onDebug = null)
     {
-        // now we have the positions as arguments
-        // so, we give a shit to this profile
-        var profile = LoadConfig(configPath, profileName, onError);
-        if (
-            profile is null &&
-            width is null &&
-            height is null &&
-            x is null &&
-            y is null
-        ) {
-            return false;
-        }
+        var useManualResize =
+            width is not null &&
+            height is not null &&
+            x is not null &&
+            y is not null;
 
-        if (
-            width is not null && height is not null &&
-            x is not null && y is not null
-        )
+        Config? profile = null;
+        if (!useManualResize)
         {
-            profile = new();
-            profile.EnableResizeByTitle = true;
-            profile.WindowSizes.Add(new WindowSize {
-                Title = title!,
-                Width = width,
-                Height = height,
-                X = x,
-                Y = y
-            });
+            profile = LoadConfig(configPath, profileName, onError);
+            if (profile is null)
+            {
+                return false;
+            }
         }
 
         var windows = Resizer.GetOpenWindows();
@@ -68,12 +56,27 @@ public static class WindowCmd
             targets.Add(new TargetWindow(handler, processName, t));
         }
 
-        bool resizeAllProcesses = string.IsNullOrEmpty(process);
-
-        if (!resizeAllProcesses)
+        IntPtr? foregroundHandle = null;
+        if (string.IsNullOrWhiteSpace(process))
         {
-            targets = targets.Where(i => i.ProcessName.Equals(process, StringComparison.OrdinalIgnoreCase)).ToList();
+            foregroundHandle = Resizer.GetForegroundHandle();
+            if (!IsProcessAvailable(foregroundHandle.Value, out var foregroundProcessName, null))
+            {
+                onError?.Invoke("Unable to determine foreground process.");
+                return false;
+            }
+
+            process = foregroundProcessName;
+
+            // If neither process nor title is provided, only resize the focused window.
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                targets = targets.Where(i => i.Handle == foregroundHandle.Value).ToList();
+            }
         }
+
+        const bool resizeAllProcesses = false;
+        targets = targets.Where(i => i.ProcessName.Equals(process, StringComparison.OrdinalIgnoreCase)).ToList();
 
         if (!string.IsNullOrEmpty(title))
         {
@@ -83,7 +86,32 @@ public static class WindowCmd
 
         foreach (var tp in targets)
         {
-            ResizeWindow(tp.Handle, profile, (p, e) =>
+            if (useManualResize)
+            {
+                try
+                {
+                    Resizer.ResizeWindow(tp.Handle, width!.Value, height!.Value);
+                    Resizer.MoveWindow(tp.Handle, new Rect
+                    {
+                        Left = x!.Value,
+                        Top = y!.Value,
+                        Right = x.Value + width.Value,
+                        Bottom = y.Value + height.Value
+                    });
+                }
+                catch
+                {
+                    tp.Result = "Elevated privileges may be required.";
+                    if (!resizeAllProcesses)
+                    {
+                        onError?.Invoke($"Unable to resize process <{tp.ProcessName}>, elevated privileges may be required.");
+                    }
+                }
+
+                continue;
+            }
+
+            ResizeWindow(tp.Handle, profile!, (p, e) =>
             {
                 tp.Result = "Elevated privileges may be required.";
                 if (!resizeAllProcesses)

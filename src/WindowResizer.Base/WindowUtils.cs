@@ -211,8 +211,10 @@ public static class WindowUtils
                                  .ToList();
 
         var windowByTitle = windowSizes.Where(w =>
-                                              w.Title.Equals(title, StringComparison.OrdinalIgnoreCase))
-                                      .ToList();
+        {
+
+            return w != null && w.Title != null && w.Title.Equals(title, StringComparison.OrdinalIgnoreCase);
+        }).ToList();
 
         if (!enableResizeByTitle)
         {

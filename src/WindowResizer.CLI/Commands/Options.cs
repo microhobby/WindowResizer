@@ -35,7 +35,7 @@ namespace WindowResizer.CLI.Commands
             aliases: new[]
             {
                 "--profile",
-                "-P"
+                "-r"
             },
             description: "Profile name, use current profile if omitted.")
         {
